@@ -22,8 +22,10 @@ public class MainApp extends Application {
                 throw new IOException("Cannot find FXML file. It seems the resource is not correctly bundled.");
             }
             Parent root = fxmlLoader.load();
-            Scene scene = new Scene(root, 640, 480);
-            stage.setTitle("Jar 启动器");
+            Scene scene = new Scene(root, 800, 600);
+            stage.setMinWidth(640);
+            stage.setMinHeight(600);
+            stage.setTitle("视觉同步服务端");
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {

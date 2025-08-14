@@ -25,8 +25,7 @@ import java.util.Date;
 
 public class ControlUIController {
 
-    @FXML
-    private Label jarPathLabel;
+    // Removed jarPathLabel and file chooser
     @FXML
     private Button startButton;
     @FXML
@@ -36,7 +35,7 @@ public class ControlUIController {
     @FXML
     private Label networkInfoLabel;
 
-    private File selectedJar;
+    private File embeddedJar;
     private Process runningProcess;
     private String bundledJavaPath;
 
@@ -54,6 +53,20 @@ public class ControlUIController {
             statusLabel.setText("初始化失败: " + e.getMessage());
             showErrorDialog("初始化失败", "无法提取嵌入的 JDK: " + e.getMessage());
         }
+        
+        try {
+            embeddedJar = extractEmbeddedJar("/jar/myJar.jar");
+            if (embeddedJar != null && embeddedJar.exists()) {
+                startButton.setDisable(false);
+                logToFile("Embedded JAR prepared at: " + embeddedJar.getAbsolutePath());
+            } else {
+                statusLabel.setText("未找到内置JAR");
+                logToFile("Embedded JAR not found in resources or file system.");
+            }
+        } catch (IOException e) {
+            statusLabel.setText("内置JAR准备失败: " + e.getMessage());
+            logToFile("Failed to prepare embedded JAR: " + e.getMessage());
+        }
     }
 
     private void updateNetworkInfo() {
@@ -67,26 +80,12 @@ public class ControlUIController {
         }
     }
 
-    @FXML
-    private void handleSelectJar() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("选择要运行的 JAR 文件");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("JAR Files", "*.jar"));
-        Stage stage = (Stage) jarPathLabel.getScene().getWindow();
-        selectedJar = fileChooser.showOpenDialog(stage);
-
-        if (selectedJar != null) {
-            jarPathLabel.setText("📄 " + selectedJar.getName());
-            jarPathLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #28a745; -fx-background-color: #d4edda; -fx-background-radius: 5; -fx-padding: 8 12 8 12; -fx-font-weight: bold;");
-            startButton.setDisable(false);
-        }
-    }
+    // Removed handleSelectJar()
 
     @FXML
     private void handleStart() {
-        if (selectedJar == null) {
-            statusLabel.setText("🔴 请先选择一个 JAR 文件");
+        if (embeddedJar == null || !embeddedJar.exists()) {
+            statusLabel.setText("🔴 未找到内置JAR");
             statusLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #dc3545; -fx-background-color: #f8d7da; -fx-background-radius: 12; -fx-padding: 4 12 4 12; -fx-font-weight: bold;");
             return;
         }
@@ -107,7 +106,6 @@ public class ControlUIController {
                 logToFile("Bundled JDK not available, falling back to system Java: " + javaPath);
             }
             
-            // Set writable working directory
             String userHome = System.getProperty("user.home");
             File workingDir = new File(userHome + "/AppData/Local/JarStarter/logs");
             if (!workingDir.exists()) {
@@ -116,13 +114,12 @@ public class ControlUIController {
             }
             logToFile("Setting JAR working directory to: " + workingDir.getAbsolutePath());
             
-            ProcessBuilder pb = new ProcessBuilder(javaPath, "-Dfile.encoding=UTF-8", "-jar", selectedJar.getAbsolutePath());
+            ProcessBuilder pb = new ProcessBuilder(javaPath, "-Dfile.encoding=UTF-8", "-jar", embeddedJar.getAbsolutePath());
             pb.directory(workingDir);
             pb.redirectErrorStream(true);
             runningProcess = pb.start();
             logToFile("JAR process started successfully with PID: " + runningProcess.pid() + " (with -Dfile.encoding=UTF-8)");
             
-            // Capture output
             new Thread(() -> {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(runningProcess.getInputStream()))) {
                     String line;
@@ -134,7 +131,6 @@ public class ControlUIController {
                 }
             }).start();
             
-            // Monitor process exit
             new Thread(() -> {
                 try {
                     int exitCode = runningProcess.waitFor();
@@ -298,6 +294,62 @@ public class ControlUIController {
             logToFile("JDK extraction failed: java.exe not found after extraction.");
             throw new IOException("JDK extraction failed: java.exe not found.");
         }
+    }
+
+    private File extractEmbeddedJar(String resourcePath) throws IOException {
+        // 1) 如果之前已解压过，直接使用
+        String userHome = System.getProperty("user.home");
+        File workDir = new File(userHome + "/AppData/Local/JarStarter/app");
+        if (!workDir.exists()) {
+            workDir.mkdirs();
+            logToFile("Created extraction directory: " + workDir.getAbsolutePath());
+        } else {
+            logToFile("Extraction directory already exists: " + workDir.getAbsolutePath());
+        }
+        File out = new File(workDir, "myJar.jar");
+        if (out.exists()) {
+            logToFile("Found existing extracted JAR: " + out.getAbsolutePath());
+            return out;
+        } else {
+            logToFile("No existing extracted JAR found.");
+        }
+
+        // 2) 尝试从类路径资源复制
+        logToFile("Attempting to load from classpath resource: " + resourcePath);
+        InputStream in = getClass().getResourceAsStream(resourcePath);
+        if (in != null) {
+            logToFile("Classpath resource found, copying to: " + out.getAbsolutePath());
+            Files.copy(in, out.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            in.close();
+            if (out.exists()) {
+                logToFile("Successfully extracted from classpath.");
+                return out;
+            } else {
+                logToFile("Copy from classpath succeeded but file does not exist after copy.");
+            }
+        } else {
+            logToFile("Classpath resource not found: " + resourcePath);
+        }
+
+        // 3) 回退：从文件系统的 target/myJar.jar 复制（便于开发期使用）
+        logToFile("Attempting fallback from file system: target/myJar.jar");
+        File devJar = new File("target/myJar.jar");
+        if (devJar.exists()) {
+            logToFile("File system JAR found, copying to: " + out.getAbsolutePath());
+            Files.copy(devJar.toPath(), out.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            if (out.exists()) {
+                logToFile("Successfully copied from file system.");
+                return out;
+            } else {
+                logToFile("Copy from file system succeeded but file does not exist after copy.");
+            }
+        } else {
+            logToFile("File system JAR not found at target/myJar.jar");
+        }
+
+        // 4) 找不到
+        logToFile("No JAR found in any location.");
+        return null;
     }
 
     private void showErrorDialog(String title, String message) {

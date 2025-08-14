@@ -11,32 +11,14 @@
 
 <VBox fx:controller="com.example.javafxtest.ControlUIController"
       xmlns:fx="http://javafx.com/fxml/1" spacing="20" alignment="CENTER"
-      style="-fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef); -fx-padding: 30;">
+      style="-fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef); -fx-padding: 50 30 30 30;">
 
     <!-- 标题区域 -->
     <VBox alignment="CENTER" spacing="10">
-        <Label text="JAR 启动器" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Label text="视觉同步服务端" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-text-alignment: center;" wrapText="true" maxWidth="Infinity"/>
         <Label text="使用内置 JDK 8 环境运行您的 Java 应用程序" 
                style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
         <Separator style="-fx-background-color: #dee2e6;"/>
-    </VBox>
-
-    <!-- JAR 文件选择区域 -->
-    <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
-        <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
-        </padding>
-        
-        <Label text="📁 选择 JAR 文件" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
-        
-        <HBox spacing="15" alignment="CENTER_LEFT">
-            <Label fx:id="jarPathLabel" text="尚未选择文件" 
-                   style="-fx-font-size: 12px; -fx-text-fill: #6c757d; -fx-background-color: #f8f9fa; -fx-background-radius: 5; -fx-padding: 8 12 8 12;"
-                   minWidth="300"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="浏览..." onAction="#handleSelectJar"
-                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 8 16 8 16;"/>
-        </HBox>
     </VBox>
 
     <!-- 控制按钮区域 -->
