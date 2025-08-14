@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:controller="com.example.javafxtest.ControlUIController"
+      xmlns:fx="http://javafx.com/fxml/1" spacing="20" alignment="CENTER"
+      style="-fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef); -fx-padding: 30;">
+
+    <!-- 标题区域 -->
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="JAR 启动器" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Label text="使用内置 JDK 8 环境运行您的 Java 应用程序" 
+               style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
+        <Separator style="-fx-background-color: #dee2e6;"/>
+    </VBox>
+
+    <!-- JAR 文件选择区域 -->
+    <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        
+        <Label text="📁 选择 JAR 文件" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+        
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Label fx:id="jarPathLabel" text="尚未选择文件" 
+                   style="-fx-font-size: 12px; -fx-text-fill: #6c757d; -fx-background-color: #f8f9fa; -fx-background-radius: 5; -fx-padding: 8 12 8 12;"
+                   minWidth="300"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="浏览..." onAction="#handleSelectJar"
+                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 8 16 8 16;"/>
+        </HBox>
+    </VBox>
+
+    <!-- 控制按钮区域 -->
+    <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        
+        <Label text="🚀 程序控制" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+        
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="startButton" text="▶ 启动" onAction="#handleStart"
+                    style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 25; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 24 12 24; -fx-min-width: 100;"
+                    disable="true"/>
+            <Button fx:id="stopButton" text="⏹ 停止" onAction="#handleStop" 
+                    style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 25; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 24 12 24; -fx-min-width: 100;"
+                    disable="true"/>
+        </HBox>
+    </VBox>
+
+    <!-- 状态信息区域 -->
+    <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        
+        <Label text="📊 状态信息" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+        
+        <VBox spacing="10">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="运行状态:" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #495057; -fx-min-width: 80;"/>
+                <Label fx:id="statusLabel" text="未运行" 
+                       style="-fx-font-size: 12px; -fx-text-fill: #6c757d; -fx-background-color: #e9ecef; -fx-background-radius: 12; -fx-padding: 4 12 4 12;"/>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="网络信息:" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #495057; -fx-min-width: 80;"/>
+                <Label fx:id="networkInfoLabel" text="IP: 获取中..., 端口: 10001" 
+                       style="-fx-font-size: 12px; -fx-text-fill: #6c757d; -fx-background-color: #e9ecef; -fx-background-radius: 12; -fx-padding: 4 12 4 12;"/>
+            </HBox>
+        </VBox>
+    </VBox>
+
+    <!-- 底部信息 -->
+    <Label text="Powered by JDK 8 Runtime Environment" 
+           style="-fx-font-size: 10px; -fx-text-fill: #adb5bd; -fx-font-style: italic;"/>
+
+</VBox> 
