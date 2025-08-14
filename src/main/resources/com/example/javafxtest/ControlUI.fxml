@@ -14,9 +14,9 @@
       style="-fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef); -fx-padding: 50 30 30 30;">
 
     <!-- 标题区域 -->
-    <VBox alignment="CENTER" spacing="10">
-        <Label text="视觉同步服务端" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-text-alignment: center;" wrapText="true" maxWidth="Infinity"/>
-        <Label text="使用内置 JDK 8 环境运行您的 Java 应用程序" 
+    <VBox alignment="CENTER" spacing="10" fillWidth="true">
+        <Label text="%app.title" alignment="CENTER" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-text-alignment: center; -fx-alignment: center;" wrapText="true" maxWidth="Infinity"/>
+        <Label text="%ui.subtitle" 
                style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
         <Separator style="-fx-background-color: #dee2e6;"/>
     </VBox>
@@ -27,15 +27,17 @@
             <Insets top="20" right="20" bottom="20" left="20"/>
         </padding>
         
-        <Label text="🚀 程序控制" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+        <Label text="%ui.section.control" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
         
         <HBox spacing="15" alignment="CENTER">
-            <Button fx:id="startButton" text="▶ 启动" onAction="#handleStart"
+            <Button fx:id="startButton" text="%ui.btn.start" onAction="#handleStart"
                     style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 25; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 24 12 24; -fx-min-width: 100;"
                     disable="true"/>
-            <Button fx:id="stopButton" text="⏹ 停止" onAction="#handleStop" 
+            <Button fx:id="stopButton" text="%ui.btn.stop" onAction="#handleStop" 
                     style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 25; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 24 12 24; -fx-min-width: 100;"
                     disable="true"/>
+            <Button fx:id="downloadLogButton" text="%ui.btn.download" onAction="#handleDownloadLog"
+                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 25; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 24 12 24; -fx-min-width: 120;"/>
         </HBox>
     </VBox>
 
@@ -45,25 +47,25 @@
             <Insets top="20" right="20" bottom="20" left="20"/>
         </padding>
         
-        <Label text="📊 状态信息" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+        <Label text="%ui.section.status" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
         
         <VBox spacing="10">
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="运行状态:" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #495057; -fx-min-width: 80;"/>
-                <Label fx:id="statusLabel" text="未运行" 
+                <Label text="%ui.label.runstate" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #495057; -fx-min-width: 80;"/>
+                <Label fx:id="statusLabel" text="%status.initial" 
                        style="-fx-font-size: 12px; -fx-text-fill: #6c757d; -fx-background-color: #e9ecef; -fx-background-radius: 12; -fx-padding: 4 12 4 12;"/>
             </HBox>
             
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="网络信息:" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #495057; -fx-min-width: 80;"/>
-                <Label fx:id="networkInfoLabel" text="IP: 获取中..., 端口: 10001" 
+                <Label text="%ui.label.netinfo" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #495057; -fx-min-width: 80;"/>
+                <Label fx:id="networkInfoLabel" text="%ui.netinfo.initial" 
                        style="-fx-font-size: 12px; -fx-text-fill: #6c757d; -fx-background-color: #e9ecef; -fx-background-radius: 12; -fx-padding: 4 12 4 12;"/>
             </HBox>
         </VBox>
     </VBox>
 
     <!-- 底部信息 -->
-    <Label text="Powered by JDK 8 Runtime Environment" 
+    <Label text="%ui.footer" 
            style="-fx-font-size: 10px; -fx-text-fill: #adb5bd; -fx-font-style: italic;"/>
 
 </VBox> 
